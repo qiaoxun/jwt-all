@@ -22,7 +22,7 @@ public class JwtAllApplication {
 		return args -> {
 			UserDTO userDTO = new UserDTO();
 			userDTO.setUsername("admin");
-			userDTO.setPassword("123456");
+			userDTO.setPassword("admin");
 			userDTO.setEmail("admin@gmail.com");
 			userService.create(userDTO);
 		};

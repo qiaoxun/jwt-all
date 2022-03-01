@@ -16,10 +16,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
 
-    public GlobalExceptionHandlerController() {
-        System.out.println("=================----------------------=============");
-    }
-
     @Bean
     public ErrorAttributes errorAttributes() {
         // Hide exception field in the return object
@@ -33,13 +29,11 @@ public class GlobalExceptionHandlerController {
 
     @ExceptionHandler(CustomException.class)
     public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
-        System.out.println("=====================");
         res.sendError(ex.getHttpStatus().value(), ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public void handleException(HttpServletResponse res) throws IOException {
-        System.out.println("=============--------------========");
         res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
     }
 
