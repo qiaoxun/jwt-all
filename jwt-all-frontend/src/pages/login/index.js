@@ -1,10 +1,12 @@
 import './index.css';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Checkbox } from 'antd';
+import { Button, Form, Input, Checkbox, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import jwt_decode from "jwt-decode";
 import client from '../../service/client';
+
 
 function Login() {
   const navigate = useNavigate();
@@ -27,6 +29,21 @@ function Login() {
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
+  };
+
+  const props = {
+    name: 'file',
+    action: '/logs',
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
   };
 
   return (
@@ -65,6 +82,12 @@ function Login() {
             <Button type="primary" htmlType="submit" className="login-form-button">
               LOGIN
             </Button>
+          </Form.Item>
+
+          <Form.Item>
+            <Upload {...props}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
           </Form.Item>
         </Form>
       </div>

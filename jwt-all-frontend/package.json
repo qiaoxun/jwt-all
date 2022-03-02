@@ -13,6 +13,7 @@
     "prettier": "node ./scripts/prettier.js",
     "prettier-all": "node ./scripts/prettier.js --all"
   },
+  "homepage": ".",
   "keywords": [],
   "author": "",
   "license": "",

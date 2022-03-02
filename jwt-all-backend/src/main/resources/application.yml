@@ -23,6 +23,9 @@ spring:
     console:
       enabled: true
 
+#  mvc:
+#    static-path-pattern: classpath:/resources/static
+
 server:
   port: 8081 # This is the default port anyway, but you can change it here
 

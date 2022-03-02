@@ -8,7 +8,6 @@ function User() {
   const { Header, Content, Footer } = Layout;
 
   const [listData, setListData] = React.useState([]);
-  const [dirty, setDirty] = React.useState(false);
 
   React.useEffect(() => {
     const url = '/user/list';
@@ -16,7 +15,7 @@ function User() {
     client.get(url).then((data) => {
       setListData(data);
     });
-  }, [dirty]);
+  });
 
   
   const columns = [

@@ -80,7 +80,7 @@ module.exports = () => {
     return merge(common, {
       mode: 'development',
       devServer: {
-        port: 9090,
+        port: 9091,
         hot: true,
         open: true,
         historyApiFallback: true,
