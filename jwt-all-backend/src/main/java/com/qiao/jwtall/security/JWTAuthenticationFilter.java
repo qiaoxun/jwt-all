@@ -2,6 +2,8 @@ package com.qiao.jwtall.security;
 
 import com.qiao.jwtall.exception.CustomException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.io.IOException;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
+    Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
@@ -29,21 +32,21 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String URI = request.getRequestURI();
         // No authentication needed
-//        if (URI.startsWith("/notice") || URI.startsWith("/auth/login") || URI.startsWith("/h2-console")
-//                || URI.startsWith("/favicon.ico") || URI.startsWith("/index.html") || URI.equals("/")
-//                || URI.equals("") || URI.startsWith("/js/") || URI.startsWith("/css/") || URI.startsWith("/login")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-//
-//        String token = jwtTokenProvider.resolveToken(request);
-//        if (StringUtils.isBlank(token)) {
-//            resolver.resolveException(request, response, null, new CustomException("Not Authenticated", HttpStatus.UNAUTHORIZED));
-//            return;
-//        }
-//
-//        boolean result = jwtTokenProvider.validateToken(token, request, response);
-//        if (!result) return;
+        if (URI.startsWith("/notice") || URI.startsWith("/auth/login") || URI.startsWith("/h2-console")
+                || URI.startsWith("/favicon.ico")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = jwtTokenProvider.resolveToken(request);
+        if (StringUtils.isBlank(token)) {
+            logger.info("Token is null");
+            resolver.resolveException(request, response, null, new CustomException("Not Authenticated", HttpStatus.UNAUTHORIZED));
+            return;
+        }
+
+        boolean result = jwtTokenProvider.validateToken(token, request, response);
+        if (!result) return;
         filterChain.doFilter(request, response);
     }
 

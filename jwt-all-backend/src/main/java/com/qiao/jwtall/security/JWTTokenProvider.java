@@ -2,10 +2,9 @@ package com.qiao.jwtall.security;
 
 import com.qiao.jwtall.dto.UserDTO;
 import com.qiao.jwtall.exception.CustomException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +26,8 @@ public class JWTTokenProvider {
 
     @Value("${security.jwt.token.expire-length:3600000}")
     private long validityInMilliseconds = 3600000; // 1h
+
+    Logger logger = LoggerFactory.getLogger(JWTTokenProvider.class);
 
     // https://stackoverflow.com/questions/34595605/how-to-manage-exceptions-thrown-in-filters-in-spring
     @Autowired
@@ -77,6 +78,10 @@ public class JWTTokenProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            if (e instanceof ExpiredJwtException) {
+
+            }
+            logger.info("Validate token failed", e.getMessage());
             resolver.resolveException(request, response, null, new CustomException("Not Authenticated", HttpStatus.UNAUTHORIZED));
             return false;
         }
